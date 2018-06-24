@@ -7,29 +7,34 @@ const getFolderSize = require('get-folder-size');
 const DEFAULT_720P_DIR = `M:/Video/Movies`;
 const DEFAULT_1080P_DIR = `R:/Video/Movies`;
 
-const DEFAULT_MOVIE_DIR = DEFAULT_1080P_DIR;
+const MOVIE_DIRECTORIES = [DEFAULT_720P_DIR, DEFAULT_1080P_DIR];
 
-fs.readdir(DEFAULT_MOVIE_DIR, (error, folders) => {
-  if (error) return console.log(error);
+MOVIE_DIRECTORIES.forEach(directory => {
+	
+  fs.readdir(directory, (error, folders) => {
+	  
+    if (error) return console.log(error);
 
-  folders.forEach(folder => {
+    folders.forEach(folder => {
 
-    let folderDir = path.join(DEFAULT_MOVIE_DIR, folder);
+      let folderDir = path.join(directory, folder);
 
-    // Remove empty directories
-    // removeEmptyDirectory(folderDir);
+      // Remove empty directories
+      // removeEmptyDirectory(folderDir);
 
-    // Rename movie directories with YTS
-    renameMovieFolder(folderDir);
+      // Rename movie directories with YTS
+      renameMovieFolder(folderDir);
+    });
+
   });
-
 });
 
 function renameMovieFolder(folderDir) {
   let name = path.basename(folderDir);
-  let isYTS = /\[YTS.AG\]/ig.test(name);
+  const YTS_REGEX = /\s\[YTS.A\w\]/ig;
+  let isYTS = YTS_REGEX.test(name);
   if (isYTS) {
-    let newName = name.replace(' [YTS.AG]', '');
+    let newName = name.replace(YTS_REGEX, '');
     let newFolderDir = path.join(path.dirname(folderDir), newName);
     fs.renameSync(folderDir, newFolderDir);
     console.log(`* Renamed ${name} to ${newName}`);
