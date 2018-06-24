@@ -4,45 +4,47 @@ const fs = require('fs');
 const path = require('path');
 const getFolderSize = require('get-folder-size');
 
-const MOVIE_DIR = `M:/Video/Movies`;
+const DEFAULT_MOVIE_DIR = `M:/Video/Movies`;
 
-fs.readdir(MOVIE_DIR, (err, folders) => {
-    folders.forEach(folder => {
+fs.readdir(DEFAULT_MOVIE_DIR, (error, folders) => {
+  if (error) return console.log(error);
 
-        let folderDir = path.join(MOVIE_DIR, folder);
+  folders.forEach(folder => {
 
-        // Remove empty directories
-        // removeEmptyDirectory(folderDir);
+    let folderDir = path.join(MOVIE_DIR, folder);
 
-        // Rename movie directories with YTS
-        renameMovieFolder(folderDir);
-    });
+    // Remove empty directories
+    // removeEmptyDirectory(folderDir);
+
+    // Rename movie directories with YTS
+    renameMovieFolder(folderDir);
+  });
 
 });
 
 function renameMovieFolder(folderDir) {
-    let name = path.basename(folderDir);
-    let isYTS = /\[YTS.AG\]/ig.test(name);
-    if (isYTS) {
-        let newName = name.replace(' [YTS.AG]', '');
-        let newFolderDir = path.join(path.dirname(folderDir), newName);
-        fs.renameSync(folderDir, newFolderDir);
-        console.log(`* Renamed ${name} to ${newName}`);
-    }
+  let name = path.basename(folderDir);
+  let isYTS = /\[YTS.AG\]/ig.test(name);
+  if (isYTS) {
+    let newName = name.replace(' [YTS.AG]', '');
+    let newFolderDir = path.join(path.dirname(folderDir), newName);
+    fs.renameSync(folderDir, newFolderDir);
+    console.log(`* Renamed ${name} to ${newName}`);
+  }
 }
 
 function removeEmptyDirectory(folderDir) {
-    getFolderSize(folderDir, (err, size) => {
-        if (err) console.log('ERROR: ', err);
+  getFolderSize(folderDir, (err, size) => {
+    if (err) console.log('ERROR: ', err);
 
-        if (size === 0) {
+    if (size === 0) {
 
-            let otherFolder = path.join(folderDir, 'Other');
-            if (fs.existsSync(otherFolder)) {
-                fs.rmdirSync(otherFolder);
-            }
-            fs.rmdirSync(folderDir);
-            console.log('-', file, ' size: ', size, ' bytes');
-        }
-    });
+      let otherFolder = path.join(folderDir, 'Other');
+      if (fs.existsSync(otherFolder)) {
+        fs.rmdirSync(otherFolder);
+      }
+      fs.rmdirSync(folderDir);
+      console.log('-', file, ' size: ', size, ' bytes');
+    }
+  });
 }
