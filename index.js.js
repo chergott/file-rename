@@ -4,14 +4,17 @@ const fs = require('fs');
 const path = require('path');
 const getFolderSize = require('get-folder-size');
 
-const DEFAULT_MOVIE_DIR = `M:/Video/Movies`;
+const DEFAULT_720P_DIR = `M:/Video/Movies`;
+const DEFAULT_1080P_DIR = `R:/Video/Movies`;
+
+const DEFAULT_MOVIE_DIR = DEFAULT_1080P_DIR;
 
 fs.readdir(DEFAULT_MOVIE_DIR, (error, folders) => {
   if (error) return console.log(error);
 
   folders.forEach(folder => {
 
-    let folderDir = path.join(MOVIE_DIR, folder);
+    let folderDir = path.join(DEFAULT_MOVIE_DIR, folder);
 
     // Remove empty directories
     // removeEmptyDirectory(folderDir);
