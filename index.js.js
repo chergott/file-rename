@@ -42,7 +42,6 @@ folders.forEach(folderName => {
   }
 });
 
-
 function toNiceFileName(filename = '') {
   filename = cleanFilename(filename);
   filename = filename.toLowerCase().replace(/[\s_]/, '-');
